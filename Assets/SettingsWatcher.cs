@@ -11,10 +11,12 @@ public class SettingsWatcher : MonoBehaviour
     public string variableName = "";
     public float rollerRatio = 1.0f;
     private TMP_InputField field;
+    private Toggle tumbler;
     ShipController ship;
     private void Awake()
     {
         field = transform.GetChild(0).GetComponent<TMP_InputField>();
+        tumbler = transform.GetComponent<Toggle>();
     }
 
     // Start is called before the first frame update
@@ -29,6 +31,8 @@ public class SettingsWatcher : MonoBehaviour
         float newValue = 0;
         switch (variableName.ToLower())
         {
+            case "maneuver":
+                newValue = ship.maneuver?1:0; break;
             case "width":
                 newValue = ship.shipWidth; break;
             case "length":
@@ -58,10 +62,28 @@ public class SettingsWatcher : MonoBehaviour
                 break;
         }
 
-        field.text = newValue.ToString();
+        SetValue(newValue);
         isWatching = true;
     }
 
+    private void SetValue(float newValue)
+    {
+        isWatching = false;
+        if (field)
+            field.text = newValue.ToString();
+        else if(tumbler)
+            tumbler.SetIsOnWithoutNotify(newValue > 0.1f);
+        isWatching = true;
+    }
+
+    private float GetValue()
+    {
+        float result = 0;
+        if (field) result = float.Parse(field.text);
+        else if (tumbler) result = tumbler.isOn ? 1 : 0;
+        return result;
+    }
+    
     public void ValueUpdate()
     {
         if (!isWatching) return;
@@ -71,7 +93,7 @@ public class SettingsWatcher : MonoBehaviour
             return;
         }
 
-        float newValue = float.Parse(field.text);
+        float newValue = GetValue();
         
         if (isFloat)
         {
@@ -83,6 +105,8 @@ public class SettingsWatcher : MonoBehaviour
         }
         switch (variableName.ToLower())
         {
+            case "maneuver":
+                ship.maneuver = newValue > 0.99f; break;
             case "width":
                 ship.shipWidth = newValue; ship.Setup(); break;
             case "length":
@@ -117,8 +141,6 @@ public class SettingsWatcher : MonoBehaviour
                 Debug.LogWarning("no variable "+variableName);
                 break;
         }
-        isWatching = false;
-        field.text = newValue.ToString();
-        isWatching = true;
+        SetValue(newValue);
     }
 }

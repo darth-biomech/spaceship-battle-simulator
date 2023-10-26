@@ -37,8 +37,7 @@ namespace DefaultNamespace
             if (pressing)
             {
                 float mouseDelta = isFloat ? Input.GetAxis("Mouse Y")*rollerRatio : Mathf.RoundToInt(Input.GetAxis("Mouse Y") *rollerRatio * 10) ;
-                Debug. Log("Its over UI elements, "+mouseDelta);
-
+             
                 mouseDelta += float.Parse(field.text);
                 field.text = mouseDelta.ToString();
                 
@@ -54,7 +53,6 @@ namespace DefaultNamespace
                 {
                     pressing = true;
                     ship.changingSetting = true;
-                    Debug.Log("Click");
                 }
             }
         }

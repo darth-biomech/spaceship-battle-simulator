@@ -25,7 +25,7 @@ namespace DefaultNamespace
 
         private void FixedUpdate()
         {
-            if (ship.simIsActive)
+            if (ShipController.simIsActive)
             {
                 
                 Vector3 TgtPosAtTime(float time, Vector3 pos0, Vector3 vel0, Vector3 acc)

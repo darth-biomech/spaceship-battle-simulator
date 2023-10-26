@@ -45,7 +45,7 @@ namespace DefaultNamespace
 
         public void Update()
         {
-            if (!ship.simIsActive) return;
+            if (!ShipController.simIsActive) return;
             
             lines.returnAll();
             if (drawLines.Count > 0)
@@ -72,7 +72,7 @@ namespace DefaultNamespace
 
         public void FixedUpdate()
         {
-            if (!ship.simIsActive) return;
+            if (!ShipController.simIsActive) return;
             if (firerateDelay < 0 && isActive)
             {
                 FireProjectile();
@@ -90,8 +90,14 @@ namespace DefaultNamespace
         {
             if (type == ProjectileType.Kinetic) FireKineticProjectile();
             else if (type == ProjectileType.Missile) FireMissile();
+            else if (type == ProjectileType.Laser) FireLaser();
         }
 
+        private void FireLaser()
+        {
+            //TODO: lasers
+            FireKineticProjectile();
+        }
         private void FireMissile()
         {
             RocketController missile = Instantiate(ship.transform.GetChild(4).GetChild(2).gameObject).GetComponent<RocketController>();
@@ -127,11 +133,8 @@ namespace DefaultNamespace
           if ((oldpos - projectedPos).magnitude < ship._box.size.y / 4) break;
       }
 
-      projectedPos += new Vector3(
-          Random.Range(-1, 1) * _scale * enemyProjectileSpread,
-          Random.Range(-1, 1) * _scale * enemyProjectileSpread,
-          Random.Range(-1, 1) * _scale * enemyProjectileSpread
-      );
+      Vector3 errorValue = new(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
+      projectedPos += errorValue * _scale * enemyProjectileSpread;
 
       
           Projectile p = new Projectile

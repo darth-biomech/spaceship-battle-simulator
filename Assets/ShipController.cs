@@ -1,136 +1,28 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using DefaultNamespace;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-[Serializable]
-public struct Projectile
-{
-    public Vector3 curPos;
-    public Vector3 targetPos;
-    public Vector3 velocity;
-    public float dist;
-    public LineRenderer line;
-    public ShipController target;
-}
-
-public struct HitInfo
-{
-    public Material hitMat;
-    public MeshRenderer hitRef;
-}
-
-[Serializable]
-public class GOPool<T> where T : class
-{
-    public List<T> objPool;
-    public List<T> objActive;
-    public GameObject template;
-    public int maxPoolSize;
-
-    public void Populate(GameObject _template, int count = 1,int size = 500)
-    {
-        if (_template)
-        {
-            T templateComponent = _template.GetComponent<T>();
-            if (templateComponent == null)
-            {
-                Debug.LogError("template doesn't have '"+typeof(T)+"' component!");
-                return;
-            }
-            maxPoolSize = Mathf.Max(count,size);
-            template = _template;
-            template.SetActive(true);
-            for (int i = 0; i < count; i++)
-            {
-                GameObject newobj = GameObject.Instantiate(template);
-                returnObj(newobj.GetComponent<T>());
-            }
-
-            template.SetActive(false);
-        }
-        else
-        {
-            Debug.LogError("no template");
-        }
-    }
-    
-    public T getObj()
-    {
-        T obj = null;
-        
-        if (objPool.Count == 0)
-        {
-            if( objActive.Count <= maxPoolSize)
-                obj = GameObject.Instantiate(template).GetComponent<T>();
-            else
-            {
-                obj = objActive[0];
-                objActive.Remove(objActive[0]);
-            }
-        }
-        else
-        {
-            obj = objPool[objPool.Count - 1];
-            objPool.Remove(obj);
-        }
-
-        T result = obj;
-        objActive.Add(result);
-        GameObject tr = (obj as Component)?.gameObject;
-        if (tr != null) tr.SetActive(true);
-        return obj;
-    }
-    public void returnObj(T obj)
-    {
-        
-        if (objActive.Contains(obj))
-            objActive.Remove(obj);
-        
-        objPool.Add(obj);
-
-        GameObject tr = (obj as Component)?.gameObject;
-        if (tr != null)
-        {
-            tr.gameObject.SetActive(false);
-            tr.transform.SetParent(null);
-            tr.transform.position = Vector3.zero;
-            tr.transform.rotation = Quaternion.Euler(Vector3.zero);
-            tr.transform.localScale = Vector3.one;
-        }
-        else
-        {
-            Debug.LogError("No transform!");
-        }
-    }
-    public void returnAll()
-    {
-        if (objActive.Count > 0 )
-        {
-            T[] actives = objActive.ToArray();
-            foreach (T obj in actives)
-            {
-                returnObj(obj);
-            }
-        }
-    }
-
-}
-
+//TODO: Rockets and lasers, point defense
 public class ShipController : MonoBehaviour
 {
-    public TextMeshProUGUI field;
-    public bool simIsActive;
-    public int shotsFired, shotsHit;
+    /// <summary>
+    /// Scale of the whole simulation, since Unity is kind of bad at space-worthy distances.<br/><br/>
+    /// 
+    /// Default scale is such that 1 unity unit (meter) corresponds to 1 kilometer, which,
+    /// given unity's limits, gives the approximate max distance sim can work at being ~25000 km.
+    /// Which can be small for some of the tests, but it's an Unity limitation since going
+    /// smaller scale than 0.001 seems to result in more precision errors anyway.
+    /// </summary>
     internal const float _scale = 0.001f;
+    
+    public bool isMainShip = true;
+    public TextMeshProUGUI field;
+    public static bool simIsActive;
+    public int shotsFired, shotsHit;
     internal BoxCollider _box;
     internal Rigidbody _rb;
     private Transform _ship, _exhaust,_cameraDist,_cameraRot,_cameraPos,_attacker;
@@ -151,10 +43,10 @@ public class ShipController : MonoBehaviour
     public float shipAngularSpeed = 10;
     
     [Header("Enemy params")]
-    public float enemyFireRate = 10;
+    public float enemyFireRate = 20;
     public int enemyGuns = 1;
-    public float enemyProjectileSpeedKms = 10;
-    public float enemyProjectileSpread = 10;
+    public float enemyProjectileSpeedKms = 100;
+    public float enemyProjectileSpread = 100;
 
     internal float currentAcceleration = 0;
     private float rotDelay = 0;
@@ -314,20 +206,25 @@ public class ShipController : MonoBehaviour
                 rotDelay = Random.Range(totalRotateTime, totalRotateTime+5);
             }
 
+            
             rotDelay -= Time.fixedDeltaTime;
             _rb.velocity = _velocity;
             _velocity += (transform.up * currentAcceleration) * Time.fixedDeltaTime;
             _rb.angularVelocity = Vector3.zero;
             
             currentRotateTime += Time.fixedDeltaTime;
-            var normalizedProgress = Mathf.Clamp01(currentRotateTime / totalRotateTime) ; // 0-1
-            var easing = rotateCurve.Evaluate(normalizedProgress);
-            transform.rotation = Quaternion.Lerp(oldRot,newRot,easing);
-          //  transform.rotation = Quaternion.RotateTowards(transform.rotation, newRot, shipAngularSpeed * Time.fixedDeltaTime);
+            
+                var normalizedProgress = Mathf.Clamp01(currentRotateTime / totalRotateTime); // 0-1
+                var easing = rotateCurve.Evaluate(normalizedProgress);
+            
+                transform.rotation = Quaternion.Lerp(oldRot, newRot, easing);
+
             if ((transform.rotation.eulerAngles - newRot.eulerAngles).magnitude < 1)
             {
                 rotDelay = 0;
             }
+            
+            
             _rb.angularVelocity = Vector3.zero;
             
         }

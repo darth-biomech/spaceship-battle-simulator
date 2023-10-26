@@ -2,11 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="955e3a7c-6cf5-47cc-9653-dbfa99b5724e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Ship_fighting_sim/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Ship_fighting_sim/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Ship_fighting_sim/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Ship_fighting_sim/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/image.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/EnemyController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/EnemyController.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/ShipObjects.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/ShipObjects.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Ship_fighting_sim/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Ship_fighting_sim/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GunPoint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GunPoint.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RocketController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RocketController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RollerButton.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RollerButton.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/SettingsRoller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/SettingsRoller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/SettingsWatcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/SettingsWatcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ShipController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ShipController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +83,7 @@
       <workItem from="1656093887547" duration="24025000" />
       <workItem from="1656090034765" duration="10359000" />
       <workItem from="1656090634984" duration="37039000" />
-      <workItem from="1656090358891" duration="914000" />
+      <workItem from="1656090358891" duration="6192000" />
     </task>
     <servers />
   </component>
